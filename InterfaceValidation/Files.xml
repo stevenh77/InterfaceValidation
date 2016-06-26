@@ -1,0 +1,18 @@
+﻿<Files      Path=".">
+  <File     Name="Client"       IsRequired="true">
+    <Column Name="FullName"     IsRequired="true"   Type="string"    MinLength="3" MaxLength="50" />
+    <Column Name="DateOfBirth"  IsRequired="false"  Type="dateTime"                               />
+    <Column Name="CashInPocket" IsRequired="true"   Type="decimal"                                />
+    <Column Name="NickName"     IsRequired="true"   Type="string"                                 />
+  </File>
+  <File     Name="Address"      IsRequired="false">
+    <Column Name="Line1"        IsRequired="true"   Type="string"                                 />
+    <Column Name="Town"         IsRequired="false"  Type="dateTime"                               />
+    <Column Name="Country"      IsRequired="true"   Type="enum"                                   />
+  </File>
+  <File     Name="Accounts"     IsRequired="true">
+  </File>
+  <File     Name="Transactions" IsRequired="false">
+    <Column Name="Amount"       IsRequired="true"   Type="decimal"                                 />
+  </File>
+</Files>
