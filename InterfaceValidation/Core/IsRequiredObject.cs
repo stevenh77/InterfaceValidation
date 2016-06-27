@@ -7,6 +7,10 @@ namespace InterfaceValidation.Core
         [XmlAttribute("IsRequired")]
         public bool IsRequired { get; set; }
 
+        public IsRequiredObject()
+        {
+        }
+
         public IsRequiredObject(string name, bool isRequired) : base(name)
         {
             IsRequired = isRequired;

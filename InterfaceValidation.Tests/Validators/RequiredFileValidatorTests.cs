@@ -1,4 +1,4 @@
-﻿using InterfaceValidation.Validators;
+﻿using InterfaceValidation.Csv.Validators;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace InterfaceValidation.Tests.Validators

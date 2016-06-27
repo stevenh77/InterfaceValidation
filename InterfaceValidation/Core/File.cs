@@ -8,9 +8,12 @@ namespace InterfaceValidation.Core
         [XmlElement("Column")]
         public List<Column> Columns { get; set; }
 
+        public File()
+        {
+        }
+
         public File(string name, bool isRequired): base(name, isRequired)
         {
-            
         }
     }
 }

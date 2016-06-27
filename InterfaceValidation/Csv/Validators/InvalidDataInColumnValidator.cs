@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 using InterfaceValidation.Core;
-using InterfaceValidation.Errors;
+using InterfaceValidation.Csv.Errors;
 
-namespace InterfaceValidation.Validators
+namespace InterfaceValidation.Csv.Validators
 {
     public class InvalidDataInColumnValidator : IValidator
     {

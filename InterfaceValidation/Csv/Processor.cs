@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 using InterfaceValidation.Core;
-using InterfaceValidation.Errors;
-using InterfaceValidation.Validators;
+using InterfaceValidation.Csv.Errors;
+using InterfaceValidation.Csv.Validators;
 
 namespace InterfaceValidation.Csv
 {
-    public class Executor : IExecutor
+    public class Processor : IProcessor
     {
-        public List<ValidationError> Process(IFileSystem fileSystem, 
+        public List<ValidationError> Execute(IFileSystem fileSystem, 
                                                 Metadata metadata, 
                                                 List<IValidator> validators)
         {
-            if (fileSystem == null) throw new NullReferenceException("fileSystem");
-            if (metadata==null) throw new NullReferenceException("metadata");
-            if (validators == null) throw new NullReferenceException("validators");
-
             var validationErrors = new List<ValidationError>();
 
             foreach (var validator in validators)

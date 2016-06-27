@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Abstractions;
 using InterfaceValidation.Core;
-using InterfaceValidation.Validators;
+using InterfaceValidation.Csv.Validators;
 
 namespace InterfaceValidation
 {
@@ -11,7 +11,7 @@ namespace InterfaceValidation
     {
         static void Main(string[] args)
         {
-            var validationErrors = new Csv.Executor().Process(
+            var validationErrors = new Csv.Processor().Execute(
                 new FileSystem(), 
                 new MetadataService().Get(),
                 new List<IValidator>()

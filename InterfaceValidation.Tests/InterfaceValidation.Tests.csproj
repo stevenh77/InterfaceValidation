@@ -58,7 +58,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Csv\ExecutorTests.cs" />
+    <Compile Include="Csv\ProcessorTests.cs" />
     <Compile Include="Mocks\FileSystem.cs" />
     <Compile Include="Mocks\MetadataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

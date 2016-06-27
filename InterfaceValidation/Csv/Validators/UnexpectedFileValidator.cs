@@ -2,9 +2,9 @@
 using System.IO.Abstractions;
 using System.Linq;
 using InterfaceValidation.Core;
-using InterfaceValidation.Errors;
+using InterfaceValidation.Csv.Errors;
 
-namespace InterfaceValidation.Validators
+namespace InterfaceValidation.Csv.Validators
 {
     public class UnexpectedFileValidator : IValidator
     {
@@ -16,7 +16,7 @@ namespace InterfaceValidation.Validators
                                            .Select(fileSystem.Path.GetFileName))
             {
                 if (!metadata.Files
-                            .Select(f => f.Name.ToLowerInvariant() + ".txt")
+                            .Select(f => f.Name.ToLowerInvariant() + "." + metadata.FileExtension)
                             .Contains(file.ToLowerInvariant()))
                 validationErrors.Add(new UnexpectedFileError(file));
             }

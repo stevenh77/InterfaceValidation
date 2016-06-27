@@ -1,4 +1,4 @@
-﻿<Files      Path=".">
+﻿<Files      Path="."            Delimiter="|"       FileExtension="txt">
   <File     Name="Client"       IsRequired="true">
     <Column Name="FullName"     IsRequired="true"   Type="string"    MinLength="3" MaxLength="50" />
     <Column Name="DateOfBirth"  IsRequired="false"  Type="dateTime"                               />
@@ -10,8 +10,7 @@
     <Column Name="Town"         IsRequired="false"  Type="dateTime"                               />
     <Column Name="Country"      IsRequired="true"   Type="enum"                                   />
   </File>
-  <File     Name="Accounts"     IsRequired="true">
-  </File>
+  <File     Name="Accounts"     IsRequired="true" />
   <File     Name="Transactions" IsRequired="false">
     <Column Name="Amount"       IsRequired="true"   Type="decimal"                                 />
   </File>

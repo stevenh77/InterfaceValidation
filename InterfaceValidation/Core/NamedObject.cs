@@ -7,6 +7,11 @@ namespace InterfaceValidation.Core
         [XmlAttribute("Name")]
         public string Name { get; set; }
 
+        public NamedObject()
+        {
+            
+        }
+
         public NamedObject(string name)
         {
             Name = name;

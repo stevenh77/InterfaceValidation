@@ -1,4 +1,4 @@
-﻿namespace InterfaceValidation.Errors
+﻿namespace InterfaceValidation.Csv.Errors
 {
     public class EmptyFileError : ValidationError
     {
