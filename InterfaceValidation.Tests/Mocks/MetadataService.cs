@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using InterfaceValidation.Core;
+using InterfaceValidation.Csv.Services;
 
 namespace InterfaceValidation.Tests.Mocks
 {

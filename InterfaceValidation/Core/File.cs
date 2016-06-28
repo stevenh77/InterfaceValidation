@@ -7,6 +7,10 @@ namespace InterfaceValidation.Core
     {
         [XmlElement("Column")]
         public List<Column> Columns { get; set; }
+        
+        public string FullFilename { get; set; }
+
+        public bool Exists { get; set; }
 
         public File()
         {

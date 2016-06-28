@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using InterfaceValidation.Core;
 
-namespace InterfaceValidation.Core
+namespace InterfaceValidation.Csv.Services
 {
     public class MetadataService : IMetadataService
     {
@@ -11,7 +12,12 @@ namespace InterfaceValidation.Core
             using (Stream reader = new FileStream(configFilePath, FileMode.Open))
             {
                 var serializer = new System.Xml.Serialization.XmlSerializer(typeof(Metadata));
-                return (Metadata)serializer.Deserialize(reader);
+                var metadata = (Metadata)serializer.Deserialize(reader);
+
+                foreach (var file in metadata.Files)
+                    file.FullFilename = string.Concat(metadata.Path, file.Name + "." + metadata.FileExtension);
+
+                return metadata;
             }
         }
     }

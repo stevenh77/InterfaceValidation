@@ -1,26 +1,20 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Abstractions;
 using System.Linq;
-using InterfaceValidation.Core;
-using InterfaceValidation.Csv.Errors;
+using InterfaceValidation.Csv.Messages;
+using File = InterfaceValidation.Core.File;
 
 namespace InterfaceValidation.Csv.Validators
 {
-    public class RequiredFileValidator : IValidator
+    public class RequiredFileValidator
     {
-        public List<ValidationError> Validate(IFileSystem fileSystem, Metadata metadata)
+        public void Validate(IList<ValidationMessage> messages,
+                                IEnumerable<string> filesInDirectory, 
+                                File file)
         {
-            var validationErrors = new List<ValidationError>();
-            foreach (var file in metadata.Files.Where(f => f.IsRequired))
-            {
-                if (fileSystem.File.Exists(Path.Combine(metadata.Path, file.Name + "." + metadata.FileExtension)))
-                    Debug.WriteLine($"Required file found: {file.Name}");
-                else
-                    validationErrors.Add(new RequiredFileError(file.Name));
-            }
-            return validationErrors;
+            if (file.IsRequired && filesInDirectory.Contains(file.FullFilename))
+                messages.Add(new InfoMessage(file.Name) { Message = "Required file found" });
+            else if (file.IsRequired)
+                messages.Add(new RequiredFileMissingMessage(file.Name));
         }
     }
 }

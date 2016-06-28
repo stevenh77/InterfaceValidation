@@ -1,50 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Abstractions;
 using System.Linq;
-using InterfaceValidation.Core;
-using InterfaceValidation.Csv.Errors;
+using InterfaceValidation.Csv.Messages;
+using File = InterfaceValidation.Core.File;
 
 namespace InterfaceValidation.Csv.Validators
 {
-    public class UnexpectedColumnValidator : IValidator
+    public class UnexpectedColumnValidator
     {
-        public List<ValidationError> Validate(IFileSystem fileSystem, Metadata metadata)
+        public void Validate(IList<ValidationMessage> messages,
+                                File file,
+                                IEnumerable<string> columnHeaders)
         {
-            var validationErrors = new List<ValidationError>();
-
-            foreach (var file in metadata.Files)
+            foreach (var columnHeader in columnHeaders)
             {
-                var filename = fileSystem.Path.Combine(metadata.Path, file.Name + "." + metadata.FileExtension);
-                if (!fileSystem.File.Exists(filename)) continue;
-
-                using (var reader = new StreamReader(filename))
+                if (!file.Columns
+                         .Select(c => c.Name.ToLowerInvariant())
+                         .Contains(columnHeader.ToLowerInvariant()))
                 {
-                    var line = reader.ReadLine();
-                    if (line == null)
-                    {
-                        // this check is performed during RequiredColumnMissingValidator
-                        //validationErrors.Add(new EmptyFileError(file.Name));
-                        continue;
-                    }
-
-                    var columnHeadersInFile = line.Split(new[] { metadata.Delimiter }, StringSplitOptions.None);
-
-                    foreach (var columnHeaderInFile in columnHeadersInFile)
-                    {
-                        // check to see if the column is in the metadata
-                        if (!file.Columns
-                                .Select(heading => heading.Name.ToLowerInvariant())
-                                .Contains(columnHeaderInFile.ToLowerInvariant()))
-                        {
-                            validationErrors.Add(new UnexpectedColumnError(file.Name, columnHeaderInFile));
-                        }
-                    }
+                    messages.Add(new UnexpectedColumnMessage(file.Name, columnHeader));
                 }
-
             }
-            return validationErrors;
         }
     }
 }

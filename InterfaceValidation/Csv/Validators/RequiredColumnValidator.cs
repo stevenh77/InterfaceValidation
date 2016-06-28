@@ -1,51 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Abstractions;
+﻿using System.Collections.Generic;
 using System.Linq;
-using InterfaceValidation.Core;
-using InterfaceValidation.Csv.Errors;
+using InterfaceValidation.Csv.Messages;
+using File = InterfaceValidation.Core.File;
 
 namespace InterfaceValidation.Csv.Validators
 {
-    public class RequiredColumnValidator : IValidator
+    public class RequiredColumnValidator
     {
-        public List<ValidationError> Validate(IFileSystem fileSystem, Metadata metadata)
+        public void Validate(IList<ValidationMessage> messages,
+                                File file, 
+                                IEnumerable<string> columnHeaders)
         {
-            var validationErrors = new List<ValidationError>();
-
-            foreach (var file in metadata.Files)
+            foreach (var column in file.Columns)
             {
-                var filename = fileSystem.Path.Combine(metadata.Path, file.Name + "." + metadata.FileExtension);
-                if (!System.IO.File.Exists(filename)) continue;
-
-                using (var reader = new StreamReader(filename))
+                if (columnHeaders.Contains(column.Name.ToLowerInvariant()))
                 {
-                    var line = reader.ReadLine();
-                    if (line == null)
-                    {
-                        validationErrors.Add(new EmptyFileError(file.Name));
-                        continue;
-                    }
-
-                    var columnHeadersInFile = line.Split(new[] { metadata.Delimiter }, StringSplitOptions.None)
-                                                  .Select(heading => heading.ToLowerInvariant());
-
-                    foreach (var column in file.Columns)
-                    {
-                        if (columnHeadersInFile.Contains(column.Name.ToLowerInvariant()))
+                    messages.Add(
+                        new InfoMessage(file.Name)
                         {
-                            Debug.WriteLine(column.IsRequired
+                            Message = column.IsRequired
                                 ? $"Required column found: {file.Name}.{column.Name}"
-                                : $"Optional column found: {file.Name}.{column.Name}");
-                        }
-                        else if (column.IsRequired)
-                            validationErrors.Add(new RequiredColumnError(file.Name, column.Name));
-                    }
+                                : $"Optional column found: {file.Name}.{column.Name}"
+                        });
                 }
+                else if (column.IsRequired)
+                    messages.Add(new RequiredColumnMissingMessage(file.Name, column.Name));
             }
-            return validationErrors;
         }
     }
 }

@@ -1,16 +1,21 @@
 ﻿using System.Collections.Generic;
-using System.IO.Abstractions;
 using InterfaceValidation.Core;
-using InterfaceValidation.Csv.Errors;
+using InterfaceValidation.Csv.Messages;
 
 namespace InterfaceValidation.Csv.Validators
 {
-    public class InvalidDataInColumnValidator : IValidator
+    public class InvalidDataInColumnValidator
     {
-        public List<ValidationError> Validate(IFileSystem fileSystem, Metadata metadata)
+        public void Validate(IList<ValidationMessage> messages,
+                                File file,
+                                int lineNumber,
+                                IEnumerable<string> columnHeaders,
+                                IEnumerable<string> data)
         {
-            var validationErrors = new List<ValidationError>();
-            return validationErrors;
+            foreach (var column in file.Columns)
+            {
+                //messages.Add(new InvalidDataInColumnMessage(file.Name, column.Name));
+            }
         }
     }
 }
