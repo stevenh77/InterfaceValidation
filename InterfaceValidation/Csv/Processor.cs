@@ -21,8 +21,8 @@ namespace InterfaceValidation.Csv
             foreach (var file in request.Files)
             {
                 request.RequiredFile.Validate(messages, 
-                                                filesInDirectory, 
-                                                file);
+                                              filesInDirectory, 
+                                              file);
 
                 if (!filesInDirectory.Contains(file.Name)) continue;
 
@@ -40,8 +40,8 @@ namespace InterfaceValidation.Csv
                                                     columnHeaders);
 
                     request.UnexpectedColumn.Validate(messages, 
-                                                        file, 
-                                                        columnHeaders);
+                                                      file, 
+                                                      columnHeaders);
 
                     int i = 0;
                     while ((line = reader.ReadLine()) != null)
@@ -49,15 +49,15 @@ namespace InterfaceValidation.Csv
                         i++;
                         var data = request.DelimiterParser.Get(line);
                         request.InvalidDataInColumn.Validate(messages, 
-                                                                file, 
-                                                                i, 
-                                                                columnHeaders, 
-                                                                data);
+                                                             file, 
+                                                             i, 
+                                                             columnHeaders, 
+                                                             data);
                     }
 
                     request.FileChecksum.Validate(messages, 
-                                                    file.Name, 
-                                                    i);
+                                                  file.Name, 
+                                                  i);
                 }
             }
             return messages;
