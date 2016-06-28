@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Csv\Messages\ChecksumFailedMessage.cs" />
     <Compile Include="Csv\Messages\InfoMessage.cs" />
+    <Compile Include="Csv\ProcessorRequest.cs" />
     <Compile Include="Csv\Services\DelimiterParser.cs" />
     <Compile Include="Csv\Services\IDelimiterParser.cs" />
     <Compile Include="Csv\Services\IMetadataService.cs" />

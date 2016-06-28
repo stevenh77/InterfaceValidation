@@ -2,56 +2,62 @@
 using System.IO;
 using System.IO.Abstractions;
 using InterfaceValidation.Csv.Messages;
-using InterfaceValidation.Csv.Services;
-using InterfaceValidation.Csv.Validators;
 using System.Linq;
 
 namespace InterfaceValidation.Csv
 {
     public class Processor
     {
-        public IEnumerable<ValidationMessage> Execute(IFileSystem fileSystem,
-                                                        IEnumerable<Core.File> files,
-                                                        string path,
-                                                        string fileExtension,
-                                                        IDelimiterParser delimiterParser,
-                                                        UnexpectedFileValidator unexpectedFileValidator,
-                                                        RequiredFileValidator requiredFileValidator,
-                                                        FileChecksumValidator fileChecksumValidator,
-                                                        RequiredColumnValidator requiredColumnValidator,
-                                                        UnexpectedColumnValidator unexpectedColumnValidator,
-                                                        InvalidDataInColumnValidator invalidDataInColumnValidator)
+        public IEnumerable<ValidationMessage> Execute(ProcessorRequest request)
         {
             var messages = new List<ValidationMessage>();
-            var filesInDirectory = ReadFilesInDirectory(fileSystem, path);
+            var filesInDirectory = ReadFilesInDirectory(request.FileSystem, request.Path);
 
-            unexpectedFileValidator.Validate(messages, filesInDirectory, files, fileExtension);
+            request.UnexpectedFile.Validate(messages, 
+                                            filesInDirectory, 
+                                            request.Files, 
+                                            request.FileExtension);
 
-            foreach (var file in files)
+            foreach (var file in request.Files)
             {
-                requiredFileValidator.Validate(messages, filesInDirectory, file);
+                request.RequiredFile.Validate(messages, 
+                                                filesInDirectory, 
+                                                file);
+
                 if (!filesInDirectory.Contains(file.Name)) continue;
 
                 using (var reader = new StreamReader(file.Name))
                 {
                     var line = reader.ReadLine();
-                    if (!fileChecksumValidator.Read(messages, file.Name, line)) continue;
+                    if (!request.FileChecksum.Read(messages, file.Name, line))
+                        continue;
 
                     line = reader.ReadLine();
-                    var columnHeaders = delimiterParser.Get(line);
+                    var columnHeaders = request.DelimiterParser.Get(line);
 
-                    requiredColumnValidator.Validate(messages, file, columnHeaders);
-                    unexpectedColumnValidator.Validate(messages, file, columnHeaders);
+                    request.RequiredColumn.Validate(messages,   
+                                                    file, 
+                                                    columnHeaders);
+
+                    request.UnexpectedColumn.Validate(messages, 
+                                                        file, 
+                                                        columnHeaders);
 
                     int i = 0;
                     while ((line = reader.ReadLine()) != null)
                     {
                         i++;
-                        var data = delimiterParser.Get(line);
-                        invalidDataInColumnValidator.Validate(messages, file, i, columnHeaders, data);
+                        var data = request.DelimiterParser.Get(line);
+                        request.InvalidDataInColumn.Validate(messages, 
+                                                                file, 
+                                                                i, 
+                                                                columnHeaders, 
+                                                                data);
                     }
 
-                    fileChecksumValidator.Validate(messages, file.Name, i);
+                    request.FileChecksum.Validate(messages, 
+                                                    file.Name, 
+                                                    i);
                 }
             }
             return messages;
